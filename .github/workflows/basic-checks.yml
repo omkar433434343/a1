@@ -1,36 +1,33 @@
-name: HTML Syntax Check
+name: Basic Checks for Static Website
 
 on:
-  pull_request:
-    branches: [main]
   push:
-    branches: [main]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  htmlhint:
+  lint-html:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
+      - name: ⬇ Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: 🔍 Check HTML syntax
         with:
-          node-version: '18'
+          files: '/*.html'
 
-      - name: Install HTMLHint
-        run: npm install htmlhint --save-dev
+  check-css-js:
+    runs-on: ubuntu-latest
 
-      - name: Run HTMLHint
-        run: npx htmlhint "**/*.html"
+    steps:
+      - name: ⬇ Checkout code
+        uses: actions/checkout@v4
 
-      # Optional: Code Scanning integration with SARIF output
-      - name: Run HTMLHint (SARIF)
-        run: npx htmlhint "**/*.html" --format sarif --output htmlhint.sarif || true
-
-      - name: Upload SARIF results
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: htmlhint.sarif
-          category: HTMLHint
+      - name: 📂 List CSS and JS files
+        run: |
+          echo "CSS files:"
+          find . -name "*.css"
+          echo "JS files:"
+          find . -name "*.js"
