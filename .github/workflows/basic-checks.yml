@@ -1,6 +1,4 @@
-name: Basic Checks for Static Website
 
-on:
   push:
     branches: [ main ]
   pull_request:
@@ -10,16 +8,27 @@ jobs:
   lint-html:
     runs-on: ubuntu-latest
     steps:
-      - name: ⬇ Checkout code
+      - name: ⬇️ Checkout code
         uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20.x'
+      - name: Install htmlhint
+        run: npm install -g htmlhint
+      - name: Run htmlhint on HTML files
+        run: htmlhint "**/*.html"
 
-      - name: Install HTMLHint
-        run: npm install htmlhint --save-dev
+  check-css-js:
+    runs-on: ubuntu-latest
 
-      - name: Run HTMLHint
-        run: npx htmlhint "**/*.html"
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📂 List CSS and JS files
+        run: |
+          echo "CSS files:"
+          find . -name "*.css"
+          echo "JS files:"
+          find . -name "*.js"
